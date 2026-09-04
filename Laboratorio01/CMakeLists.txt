@@ -10,7 +10,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(${PROJECT_NAME}
     src/ejercicio1.cpp
     src/ejercicio2.cpp
-    src/ejercicio3.cpp
     src/ejercicio4.cpp
     src/ejercicio5.cpp
     main.cpp
