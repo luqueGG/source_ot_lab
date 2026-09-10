@@ -25,9 +25,9 @@ void ejercicio1();
  * */
 void ejercicio2();
 
-
-/*
-* EJERCICIO 5
+void ejercicio4();
+/**/ 
+/* EJERCICIO 5
 * --------------
 Implementa una cita medica usando una clase (class) en vez de estructura.
 - Se define la clase CitaMedica con los atributos fecha, hora, tipoAtencion y

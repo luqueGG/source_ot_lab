@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
+#include <functional>
 // Para numeros aleatorios
 #include <ctime>
 #include <cstdlib>
@@ -56,7 +57,7 @@ void ejercicio1()
     }
     
     // Ordenamiento y salida
-    std::sort(numeros.begin(), numeros.end());
+    std::sort(numeros.begin(), numeros.end(), std::greater<unsigned int>());
     for (const unsigned int& i : numeros)
     {
         std::cout << i << " ";

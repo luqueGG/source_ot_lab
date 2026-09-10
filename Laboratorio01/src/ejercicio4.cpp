@@ -1,3 +1,7 @@
+
+#include "ejercicios.hpp"
+
+
 #include <iostream>
 #include <string>
 using namespace std;
@@ -39,7 +43,7 @@ struct CitaMedica {
     }
 };
 
-void ejercicio5() {
+void ejercicio4() {
     string f, h, t;
     int n;
 
