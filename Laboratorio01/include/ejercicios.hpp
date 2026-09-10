@@ -13,3 +13,15 @@ lo siguiente:
 - Luego, el programa debe ordenar de mayor a menor (utilizar un algoritmo de ordenamiento de su preferencia). 
 */
 void ejercicio1();
+
+
+/*
+ * EJERCICIO 2
+ * -------------
+ * Hacer un programa C++ y usar el manipulador “setw” para listar una estadística relacionado a 
+ * deportes (usted debe proponer). La información en la consola debe visualizarse en orden. 
+ * Luego reutilizar el código anterior, y reemplazar “setw” por otro manipulador que investigaste en 
+ * la hora de laboratorio. ¿Cuál te ha servido mejor? 
+ * */
+void ejercicio2();
+
