@@ -16,6 +16,17 @@ void ejercicio1();
 
 
 /*
+ * EJERCICIO 2
+ * -------------
+ * Hacer un programa C++ y usar el manipulador “setw” para listar una estadística relacionado a 
+ * deportes (usted debe proponer). La información en la consola debe visualizarse en orden. 
+ * Luego reutilizar el código anterior, y reemplazar “setw” por otro manipulador que investigaste en 
+ * la hora de laboratorio. ¿Cuál te ha servido mejor? 
+ * */
+void ejercicio2();
+
+
+/*
 * EJERCICIO 5
 * --------------
 Implementa una cita medica usando una clase (class) en vez de estructura.
@@ -32,3 +43,4 @@ Implementa una cita medica usando una clase (class) en vez de estructura.
   esUrgencia() para avisar si es una urgencia o una cita normal.
 */
 void ejercicio5();
+
