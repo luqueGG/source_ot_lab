@@ -1,0 +1,202 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <memory>
+
+using namespace std;
+
+// -------------------------------------------------------------------------
+// 1. PRODUCTOS ABSTRACTOS (Categorías de la receta)
+// -------------------------------------------------------------------------
+class Receta {
+protected:
+    string nombre;
+    string lugar;
+    string dificultad;
+    int tiempoMinutos;
+    int porciones;
+    vector<string> ingredientes;
+
+public:
+    Receta(string nom, string lug, string dif, int tiempo, int porc, vector<string> ingr)
+        : nombre(move(nom)), lugar(move(lug)), dificultad(move(dif)),
+          tiempoMinutos(tiempo), porciones(porc), ingredientes(move(ingr)) {}
+
+    virtual ~Receta() = default;
+    virtual string getCategoria() const = 0;
+
+    void mostrarReceta() const {
+        cout << "  --------------------------------------------------\n";
+        cout << "  [" << getCategoria() << "] " << nombre << "\n";
+        cout << "  Lugar / Origen : " << lugar << "\n";
+        cout << "  Dificultad     : " << dificultad
+             << " | Tiempo: " << tiempoMinutos << " min"
+             << " | Porciones: " << porciones << "\n";
+        cout << "  Ingredientes   :\n";
+        for (const auto& ing : ingredientes) {
+            cout << "    * " << ing << "\n";
+        }
+    }
+};
+
+class Entrada : public Receta {
+public:
+    using Receta::Receta;
+    string getCategoria() const override { return "ENTRADA"; }
+};
+
+class PlatoFondo : public Receta {
+public:
+    using Receta::Receta;
+    string getCategoria() const override { return "PLATO DE FONDO"; }
+};
+
+class Postre : public Receta {
+public:
+    using Receta::Receta;
+    string getCategoria() const override { return "POSTRE"; }
+};
+
+// -------------------------------------------------------------------------
+// 2. PRODUCTOS CONCRETOS - FAMILIA AREQUIPA
+// -------------------------------------------------------------------------
+class PastelDePapaArequipa : public Entrada {
+public:
+    PastelDePapaArequipa()
+        : Entrada("Pastel de Papa al Horno", "Arequipa, Perú", "Media", 65, 6,
+                  {"2 kg de papa blanca", "400 g de queso fresco serrano", "250 ml de leche evaporada",
+                   "3 huevos", "Anís en grano", "Mantequilla y sal"}) {}
+};
+
+class AdoboArenqueno : public PlatoFondo {
+public:
+    AdoboArenqueno()
+        : PlatoFondo("Adobo Arequipeño", "Cayma, Arequipa", "Media-Alta", 150, 4,
+                     {"1.5 kg de lomo de cerdo", "Chicha de jora", "Ají panca molido",
+                      "Cebolla roja en juliana", "Orégano, comino, ajo y rocoto"}) {}
+};
+
+class QuesoHelado : public Postre {
+public:
+    QuesoHelado()
+        : Postre("Queso Helado Arequipeño", "Arequipa, Perú", "Fácil", 45, 6,
+                 {"500 ml de leche fresca", "400 ml de leche evaporada", "150 g de azúcar",
+                  "Canela en rama, clavo de olor y coco rallado", "Esencia de vainilla"}) {}
+};
+
+// -------------------------------------------------------------------------
+// 3. PRODUCTOS CONCRETOS - FAMILIA COSTA CRIOLLA
+// -------------------------------------------------------------------------
+class CausaLimena : public Entrada {
+public:
+    CausaLimena()
+        : Entrada("Causa Rellena de Pollo y Palta", "Lima, Perú", "Fácil", 40, 4,
+                  {"1 kg de papa amarilla", "3 cucharadas de ají amarillo molido",
+                   "1 pechuga de pollo deshilachada", "2 paltas maduras", "Limón, aceite y mayonesa"}) {}
+};
+
+class AjiDeGallina : public PlatoFondo {
+public:
+    AjiDeGallina()
+        : PlatoFondo("Ají de Gallina", "Costa Central, Perú", "Media", 60, 4,
+                     {"1 gallina o pechuga cocida", "6 rebanadas de pan de molde remojadas",
+                      "4 ajíes amarillos sin venas", "100 g de pecanas molidas",
+                      "Queso parmesano, aceitunas y huevo duro"}) {}
+};
+
+class MazamorraMorada : public Postre {
+public:
+    MazamorraMorada()
+        : Postre("Mazamorra Morada", "Lima, Perú", "Fácil", 50, 6,
+                 {"1 kg de maíz morado", "1 piña (cáscara y pulpa en cubos)", "1 membrillo",
+                  "Canela, clavo de olor y guindones", "Harina de camote y limón"}) {}
+};
+
+// -------------------------------------------------------------------------
+// 4. ABSTRACT FACTORY Y FÁBRICAS CONCRETAS
+// -------------------------------------------------------------------------
+class FabricaRecetas {
+public:
+    virtual ~FabricaRecetas() = default;
+    virtual unique_ptr<Entrada> crearEntrada() const = 0;
+    virtual unique_ptr<PlatoFondo> crearPlatoFondo() const = 0;
+    virtual unique_ptr<Postre> crearPostre() const = 0;
+    virtual string getNombreCocina() const = 0;
+};
+
+class FabricaArequipena : public FabricaRecetas {
+public:
+    string getNombreCocina() const override { return "Cocina Tradicional Arequipeña"; }
+    unique_ptr<Entrada> crearEntrada() const override { return make_unique<PastelDePapaArequipa>(); }
+    unique_ptr<PlatoFondo> crearPlatoFondo() const override { return make_unique<AdoboArenqueno>(); }
+    unique_ptr<Postre> crearPostre() const override { return make_unique<QuesoHelado>(); }
+};
+
+class FabricaCriolla : public FabricaRecetas {
+public:
+    string getNombreCocina() const override { return "Cocina Criolla Costeña"; }
+    unique_ptr<Entrada> crearEntrada() const override { return make_unique<CausaLimena>(); }
+    unique_ptr<PlatoFondo> crearPlatoFondo() const override { return make_unique<AjiDeGallina>(); }
+    unique_ptr<Postre> crearPostre() const override { return make_unique<MazamorraMorada>(); }
+};
+
+// -------------------------------------------------------------------------
+// 5. CLIENTE (Solicita menú completo o plato específico según la fábrica)
+// -------------------------------------------------------------------------
+void generarCartaPorEstilo(const FabricaRecetas& fabrica, int opcionPlato) {
+    cout << "\n==================================================\n";
+    cout << "LÍNEA DE RECETAS: " << fabrica.getNombreCocina() << "\n";
+    cout << "==================================================\n";
+
+    switch (opcionPlato) {
+        case 1:
+            fabrica.crearEntrada()->mostrarReceta();
+            break;
+        case 2:
+            fabrica.crearPlatoFondo()->mostrarReceta();
+            break;
+        case 3:
+            fabrica.crearPostre()->mostrarReceta();
+            break;
+        case 4:
+            fabrica.crearEntrada()->mostrarReceta();
+            fabrica.crearPlatoFondo()->mostrarReceta();
+            fabrica.crearPostre()->mostrarReceta();
+            break;
+        default:
+            cout << "Opción de plato no válida.\n";
+    }
+}
+
+int main() {
+    int estilo = -1;
+    while (true) {
+        cout << "\nSeleccione el estilo / lugar de cocina:\n";
+        cout << "  1. Cocina Arequipeña\n";
+        cout << "  2. Cocina Criolla\n";
+        cout << "  0. Salir\n";
+        cout << "Opción: ";
+        cin >> estilo;
+
+        if (estilo == 0) break;
+
+        unique_ptr<FabricaRecetas> fabrica;
+        if (estilo == 1) {
+            fabrica = make_unique<FabricaArequipena>();
+        } else if (estilo == 2) {
+            fabrica = make_unique<FabricaCriolla>();
+        } else {
+            cout << "Estilo inválido, intente nuevamente.\n";
+            continue;
+        }
+
+        int plato = 0;
+        cout << "Seleccione receta (1: Entrada, 2: Plato de Fondo, 3: Postre, 4: Menú Completo): ";
+        cin >> plato;
+
+        generarCartaPorEstilo(*fabrica, plato);
+    }
+
+    cout << "Saliendo del generador de recetas...\n";
+    return 0;
+}
